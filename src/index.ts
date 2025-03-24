@@ -7,7 +7,8 @@ import { havePlotBeenDeleted, insertPlotData, insertPlotSensorData, updatePlotDa
 // Routes
 import plotRouter from './modules/plot/plot.routes';
 import userRouter from './modules/user/user.routes';
-import sensorRouter from './modules/sensor/sensor.routes'
+import sensorRouter from './modules/sensor/sensor.routes';
+import historyRouter from './modules/historyPlot/historyPlot.routes';
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ dotenv.config();
 app.use('/api', plotRouter);
 app.use('/api', sensorRouter);
 app.use('/api', userRouter);
+app.use('/api', historyRouter);
 
 const PORT = process.env.PORT || 3000;
 

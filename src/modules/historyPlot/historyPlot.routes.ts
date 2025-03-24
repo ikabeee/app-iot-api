@@ -5,6 +5,6 @@ import { getAllHistoryPlotController, getHistoryByPlotIdController } from "./his
 const router = Router()
 
 router.get('/history-plot/all', getAllHistoryPlotController);
-router.get('/history/:plotId', getHistoryByPlotIdController);
+router.get('/history-plot/:plotId', getHistoryByPlotIdController);
 
 export default router;
