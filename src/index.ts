@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors())
 dotenv.config();
+
 app.use('/api', plotRouter);
 app.use('/api', sensorRouter);
 app.use('/api', userRouter);
