@@ -2,15 +2,16 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import plotRouter from './modules/plot/plot.routes';
 import { insertDataSensors } from './common/scripts/sensorApi';
-import { havePlotBeenDeleted, insertPlotData, insertPlotSensorData } from './common/scripts/plotApi';
+import { havePlotBeenDeleted, insertPlotData, insertPlotSensorData, updatePlotData } from './common/scripts/plotApi';
 
 const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors())
-
 dotenv.config();
+app.use('/api', plotRouter);
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=>{
@@ -23,6 +24,9 @@ app.listen(PORT, ()=>{
     }, 1000)
     setInterval(async()=>{
         await insertPlotData()
+    }, 1000)
+    setInterval(async()=>{
+        await updatePlotData()
     }, 1000)
     setInterval(async()=>{
         await insertPlotSensorData()
