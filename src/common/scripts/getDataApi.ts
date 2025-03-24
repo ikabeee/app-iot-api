@@ -3,7 +3,7 @@ import { SensorApi } from '../interfaces/SensorApi';
 import { ParcelaApi } from '../interfaces/ParcelaApi';
 
 const getSensors = async (): Promise<SensorApi> => {
-        const response = await axios.get(`https://moriahmkt.com/iotapp/`);
+        const response = await axios.get(`https://moriahmkt.com/iotapp/test/`);
         if(!response) {
                 console.error(`Error unexpected`);
         }
@@ -12,7 +12,7 @@ const getSensors = async (): Promise<SensorApi> => {
 }
 
 const getAllPlots = async (): Promise<ParcelaApi[]> => {
-        const response = await axios.get(`https://moriahmkt.com/iotapp/`);
+        const response = await axios.get(`https://moriahmkt.com/iotapp/test/`);
         if(!response) {
                 console.error(`Error unexpected`);
         }
