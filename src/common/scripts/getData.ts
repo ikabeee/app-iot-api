@@ -26,7 +26,4 @@ const getAllPlots = async (): Promise<ParcelaApi[] | undefined> => {
     }
 }
 
-module.exports = {
-    getAllPlots,
-    getSensors
-};
+export { getAllPlots, getSensors }
