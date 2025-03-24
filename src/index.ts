@@ -6,7 +6,8 @@ import { insertDataSensors } from './common/scripts/sensorApi';
 import { havePlotBeenDeleted, insertPlotData, insertPlotSensorData, updatePlotData } from './common/scripts/plotApi';
 // Routes
 import plotRouter from './modules/plot/plot.routes';
-import userRouter from './modules/user/user.routes'
+import userRouter from './modules/user/user.routes';
+import sensorRouter from './modules/sensor/sensor.routes'
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ app.use(morgan('dev'));
 app.use(cors())
 dotenv.config();
 app.use('/api', plotRouter);
+app.use('/api', sensorRouter);
 app.use('/api', userRouter);
 
 const PORT = process.env.PORT || 3000;
