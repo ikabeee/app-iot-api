@@ -12,3 +12,56 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+  role     Roles
+  plot     Plot?
+}
+
+model Plot {
+  id           Int       @id @default(autoincrement())
+  name         String
+  location     String
+  manager      String
+  cropType     String
+  lastWatering DateTime
+  lat          Float
+  lng          Float
+  userId       Int       @unique
+  user         User      @relation(fields: [userId], references: [id])
+  history      History[]
+}
+
+model History {
+  id          Int      @id @default(autoincrement())
+  sun         Float
+  rain        Float
+  humidity    Float
+  temperature Float
+  date        DateTime
+  plotId      Int
+  plot        Plot     @relation(fields: [plotId], references: [id], onDelete: Cascade)
+}
+
+model Sensor {
+  id          Int   @id @default(autoincrement())
+  sun         Float
+  rain        Float
+  humidity    Float
+  temperature Float
+}
+
+enum Status {
+  DELETED
+  ACTIVE
+  INACTIVE
+}
+
+enum Roles {
+  ADMIN
+  USER
+}
