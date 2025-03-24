@@ -62,5 +62,19 @@ const insertPlotSensorData = async () => {
     }
 }
 
+const updatePlotData =async()=>{
+    const apiPlots = await getAllPlots();
+    for (const plot of apiPlots) {
+        await prisma.plot.update({
+            where: {id: plot.id},
+            data: {
+                lastWatering: new Date(plot.ultimo_riego),
+                lat: plot.latitud,
+                lng: plot.longitud
+            }
+        })
+    }
+}
 
-export { havePlotBeenDeleted, insertPlotData, insertPlotSensorData }
+
+export { havePlotBeenDeleted, insertPlotData, insertPlotSensorData, updatePlotData }
