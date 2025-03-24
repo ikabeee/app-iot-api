@@ -20,7 +20,7 @@ export const registerController = async(req: Request, res: Response) =>{
         res.status(201).json({message: `User registered`, userRegister});
         return;
     }catch(error: any) {
-        res.status(500).json({httpCode:500, error: `Unexpected error`, timestamp: new Date()});
+        res.status(500).json({httpCode:500, error: `Unexpected error ${error}`, timestamp: new Date()});
         return;
     }
 }

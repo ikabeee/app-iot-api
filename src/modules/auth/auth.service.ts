@@ -30,21 +30,20 @@ export const login = async (userData: LoginDto) => {
 }
 
 export const register = async (userData: RegisterDto) => {
-    const {password, email} = userData;
+    const {password, email, name} = userData;
     const areUserRegistered = await prisma.user.findUnique({ where: { email: email } });
     if(areUserRegistered){
         throw new Error("User already exist");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-        data:{
-            ...userData,
+        data: {
+            name: name,
+            email: email,
+            password: hashedPassword,
             status: 'ACTIVE',
-            role: 'USER',
-            password: hashedPassword
+            role: 'USER'
         }
     })
-
     return {name:user.name, email: user.email}
-
 }
