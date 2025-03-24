@@ -5,6 +5,7 @@ import cors from 'cors';
 import { insertDataSensors } from './common/scripts/sensorApi';
 import { havePlotBeenDeleted, insertPlotData, insertPlotSensorData, updatePlotData } from './common/scripts/plotApi';
 // Routes
+import oauthRouter from './modules/auth/auth.routes';
 import plotRouter from './modules/plot/plot.routes';
 import userRouter from './modules/user/user.routes';
 import sensorRouter from './modules/sensor/sensor.routes';
@@ -16,6 +17,8 @@ app.use(morgan('dev'));
 app.use(cors())
 dotenv.config();
 
+app.use('/api', oauthRouter);
+
 app.use('/api', plotRouter);
 app.use('/api', sensorRouter);
 app.use('/api', userRouter);
@@ -25,19 +28,19 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=>{
     console.log(`Server running on port: ${PORT}`);
-    setInterval(async () => {
-        await insertDataSensors();
-    }, 1000);
-    setInterval(async()=>{
-        await havePlotBeenDeleted();
-    }, 1000)
-    setInterval(async()=>{
-        await insertPlotData()
-    }, 1000)
-    setInterval(async()=>{
-        await updatePlotData()
-    }, 1000)
-    setInterval(async()=>{
-        await insertPlotSensorData()
-    }, 1000)
+    // setInterval(async () => {
+    //     await insertDataSensors();
+    // }, 1000);
+    // setInterval(async()=>{
+    //     await havePlotBeenDeleted();
+    // }, 1000)
+    // setInterval(async()=>{
+    //     await insertPlotData()
+    // }, 1000)
+    // setInterval(async()=>{
+    //     await updatePlotData()
+    // }, 1000)
+    // setInterval(async()=>{
+    //     await insertPlotSensorData()
+    // }, 1000)
 });

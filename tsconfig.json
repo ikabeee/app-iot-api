@@ -111,5 +111,8 @@
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     "rootDir": "./src",
     "outDir": "./dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
   }
 }
