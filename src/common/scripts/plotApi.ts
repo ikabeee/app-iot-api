@@ -15,7 +15,6 @@ const havePlotBeenDeleted = async (): Promise<void> => {
                     status: 'DELETED'
                 }
             });
-            console.log(`A plot with id ${deletedPlot.id} have been deleted`)
         }
     }
 }
