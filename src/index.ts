@@ -2,9 +2,11 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-import plotRouter from './modules/plot/plot.routes';
 import { insertDataSensors } from './common/scripts/sensorApi';
 import { havePlotBeenDeleted, insertPlotData, insertPlotSensorData, updatePlotData } from './common/scripts/plotApi';
+// Routes
+import plotRouter from './modules/plot/plot.routes';
+import userRouter from './modules/user/user.routes'
 
 const app = express();
 app.use(express.json());
@@ -12,6 +14,8 @@ app.use(morgan('dev'));
 app.use(cors())
 dotenv.config();
 app.use('/api', plotRouter);
+app.use('/api', userRouter);
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=>{
