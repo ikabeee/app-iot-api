@@ -48,11 +48,12 @@ model History {
 }
 
 model Sensor {
-  id          Int   @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   sun         Float
   rain        Float
   humidity    Float
   temperature Float
+  date        DateTime
 }
 
 enum Status {
