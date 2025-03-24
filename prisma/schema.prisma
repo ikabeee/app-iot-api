@@ -19,6 +19,7 @@ model User {
   email    String @unique
   password String
   role     Roles
+  status   Status
   plot     Plot?
 }
 
@@ -31,8 +32,9 @@ model Plot {
   lastWatering DateTime
   lat          Float
   lng          Float
-  userId       Int       @unique
-  user         User      @relation(fields: [userId], references: [id])
+  status       Status
+  userId       Int?       @unique
+  user         User ?     @relation(fields: [userId], references: [id])
   history      History[]
 }
 
