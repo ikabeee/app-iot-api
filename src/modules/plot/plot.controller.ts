@@ -1,5 +1,5 @@
-import { Request, RequestHandler, Response } from 'express';
-import { getAllPlots, getPlotById } from './plot.service';
+import { Request, Response } from 'express';
+import { getAllPlots, getPlotById, getPlotsDeleted } from './plot.service';
 
 const getAllPlotsController = async (_req: Request, res: Response): Promise<void> => {
     try {
@@ -7,12 +7,12 @@ const getAllPlotsController = async (_req: Request, res: Response): Promise<void
         res.status(200).json(plots);
         return;
     } catch (error: unknown) {
-        res.status(500).json({ error: `Unexpected error ${error}`, timestamp: new Date() });
+        res.status(500).json({ httpCode: 500, error: `Unexpected error ${error}`, timestamp: new Date() });
         return;
     }
 }
 
-const getPlotByIdController: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+const getPlotByIdController = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
         const plot = await getPlotById(+id);
@@ -22,9 +22,20 @@ const getPlotByIdController: RequestHandler = async (req: Request, res: Response
         }
         res.status(200).json(plot);
     } catch (error: unknown) {
-        res.status(500).json({ error: `Unexpected error: ${error}`, timestamp: new Date() })
+        res.status(500).json({ httpCode: 500, error: `Unexpected error: ${error}`, timestamp: new Date() })
         return;
     }
 }
 
-export { getAllPlotsController, getPlotByIdController }
+const getPlotsDeletedController = async (_req: Request, res: Response): Promise<void> => {
+    try {
+        const plotsDeleted = await getPlotsDeleted();
+        res.status(200).json({ plotsDeleted });
+        return;
+    } catch (error: unknown) {
+        res.status(500).json({ httpCode: 500, error: `Unexpected error: ${error}`, timestamp: new Date() })
+        return;
+    }
+}
+
+export { getAllPlotsController, getPlotByIdController, getPlotsDeletedController }
