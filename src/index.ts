@@ -19,6 +19,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(cookieParser());
+
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your-session-secret',
     resave: false,
