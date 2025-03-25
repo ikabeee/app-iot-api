@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import session from "express-session";
+import { plainToInstance } from 'class-transformer';
 
 declare module "express-session" {
     interface SessionData {
@@ -8,10 +9,18 @@ declare module "express-session" {
 }
 
 import { login, register, verifyOTP } from "./auth.service";
+import { LoginDto } from "./dto/login.dto";
+import { validate } from "class-validator";
+import { RegisterDto } from "./dto/register.dto";
 
 export const loginController = async (req: Request, res: Response) => {
     try {
-        const userData = req.body;
+        const userData = plainToInstance(LoginDto, req.body);
+        const errors = await validate(userData);
+        if (errors.length > 0) {
+            const validationErrors = errors.map(err => Object.values(err.constraints || {}));
+            throw new Error(`Validation failed: ${validationErrors.join(', ')}`);
+        }
         const { otpSecret } = await login(userData);
         req.session.otpSecret = otpSecret;
         res.status(200).json({ message: 'OTP sent to email', otpSecret });
@@ -22,7 +31,12 @@ export const loginController = async (req: Request, res: Response) => {
 
 export const registerController = async (req: Request, res: Response) => {
     try {
-        const userData = req.body;
+        const userData = plainToInstance(RegisterDto, req.body);
+        const errors = await validate(userData);
+        if (errors.length > 0) {
+            const validationErrors = errors.map(err => Object.values(err.constraints || {}));
+            throw new Error(`Validation failed: ${validationErrors.join(', ')}`);
+        }
         const { otpSecret } = await register(userData);
         req.session.otpSecret = otpSecret;
         res.status(201).json({ message: `User registered`, otpSecret });
