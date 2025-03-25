@@ -1,9 +1,11 @@
-import { Router } from "express";
-import { loginController, registerController } from "./auth.controller";
+import { Router } from 'express';
+import { loginController, registerController, generateOTPController, verifyOTPController } from './auth.controller';
 
-const router = Router()
+const router = Router();
 
-router.post('/oauth/login', loginController);
-router.post('/oauth/register', registerController);
+router.post('/login', loginController);
+router.post('/register', registerController);
+router.post('/generate-otp', generateOTPController);
+router.post('/verify-otp', verifyOTPController);
 
 export default router;
