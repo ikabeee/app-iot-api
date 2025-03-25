@@ -12,7 +12,6 @@ import sensorRouter from './modules/sensor/sensor.routes';
 import historyRouter from './modules/historyPlot/historyPlot.routes';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import { isAuthenticated } from './middlewares/auth';
 
 const app = express();
 dotenv.config();
@@ -30,10 +29,10 @@ app.use(session({
 
 app.use('/api', oauthRouter);
 
-app.use('/api', isAuthenticated, plotRouter);
-app.use('/api', isAuthenticated, sensorRouter);
-app.use('/api', isAuthenticated, userRouter);
-app.use('/api', isAuthenticated, historyRouter);
+app.use('/api', plotRouter);
+app.use('/api', sensorRouter);
+app.use('/api', userRouter);
+app.use('/api', historyRouter);
 
 const PORT = process.env.PORT || 3000;
 

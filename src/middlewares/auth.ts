@@ -1,24 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
-import * as jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
-const jwtSecret = process.env.JWT_SECRET as string;
+const secret = process.env.JWT_SECRET as string;
 
-export const isAuthenticated = (req: Request, res: Response, next: NextFunction): void => {
-    const token = req.cookies.access_token;
-    if (!token) {
-        res.status(401).json({ message: 'Unauthorized: No token provided' });
-        return;
+export const auth = (req: Request, res: Response, next: NextFunction) => {
+    const notAuthRequired = ['/login', '/register', '/verify-otp'];
+    if(notAuthRequired.includes(req.url)) return next();
+    const {access_token} = req.cookies;
+    if(!access_token) return res.status(403).send({ message: 'Access Denied', details: [{token: 'Not provided'}]});
+    try{
+        jwt.verify(access_token.split(' ')[1], secret);
+    }catch(error){
+        return res.status(403).send({message: 'Access Denied', details: [{token: 'Invalid'}]})
     }
-
-    try {
-        const decoded = jwt.verify(token, jwtSecret);
-        req.user = decoded; // Almacena la información del usuario en la solicitud
-        next(); // Pasa el control al siguiente middleware o ruta
-    } catch (error) {
-        res.status(401).json({ message: 'Unauthorized: Invalid token' });
-        return;
-    }
-};
+    return next();
+}
