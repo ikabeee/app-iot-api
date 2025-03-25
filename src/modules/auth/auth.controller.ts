@@ -6,6 +6,7 @@ declare module "express-session" {
         otpSecret: string;
     }
 }
+
 import { login, register, verifyOTP } from "./auth.service";
 
 export const loginController = async (req: Request, res: Response) => {

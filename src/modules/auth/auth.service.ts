@@ -12,7 +12,6 @@ const jwtSecret = process.env.JWT_SECRET as string;
 
 export const login = async (userData: LoginDto) => {
     const { password, email } = userData;
-    if(!password || !email) throw new Error('S')
     
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) throw new Error('User not found');
