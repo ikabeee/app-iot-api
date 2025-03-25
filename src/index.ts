@@ -12,6 +12,7 @@ import sensorRouter from './modules/sensor/sensor.routes';
 import historyRouter from './modules/historyPlot/historyPlot.routes';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import { auth } from './middlewares/auth';
 
 const app = express();
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(cookieParser());
+app.use(auth);
 
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your-session-secret',
