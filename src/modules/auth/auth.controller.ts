@@ -5,7 +5,7 @@ export const loginController = async (req: Request, res: Response) => {
     try {
         const userData = req.body;
         const tokenInfo = await login(userData);
-        res.status(201).json({ message: `User logged`, tokenInfo });
+        res.status(201).json({ tokenInfo });
         return;
     } catch (error: any) {
         res.status(500).json({ httpCode: 500, error: `Unexpected error: ${error.message}`, timestamp: new Date() });
