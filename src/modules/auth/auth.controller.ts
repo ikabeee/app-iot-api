@@ -64,3 +64,17 @@ export const verifyOTPController = async (req: Request, res: Response): Promise<
         res.status(400).json({ httpCode: 400, error: `OTP verification failed: ${error.message}`, timestamp: new Date() });
     }
 };
+
+export const logoutController = (req: Request, res: Response) => {
+    try {
+        req.session.destroy((err) => {
+            if (err) {
+                throw new Error('Error al destruir la sesión');
+            }
+            res.clearCookie('access_token');
+            res.status(200).json({ message: 'Logout exitoso' });
+        });
+    } catch (error: any) {
+        res.status(500).json({ httpCode: 500, error: `Error inesperado: ${error.message}`, timestamp: new Date() });
+    }
+};
