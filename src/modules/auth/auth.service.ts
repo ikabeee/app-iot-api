@@ -8,7 +8,7 @@ import { prisma } from '../../config/db';
 import { sendEmail } from './../../config/nodemailer';
 dotenv.config();
 
-const secret = process.env.JWT_SECRET;
+const jwtSecret = process.env.JWT_SECRET as string;
 
 export const login = async (userData: LoginDto) => {
     const { password, email } = userData;
@@ -54,27 +54,33 @@ export const register = async (userData: RegisterDto) => {
     return { otpSecret: otpSecret.base32 };
 };
 
-export const verifyOTP = async (token: string, secret: string, email: string) => {
+export const verifyOTP = async (token: string, otpSecret: string, email: string) => {
     const verified = speakeasy.totp.verify({
-        secret: secret,
+        secret: otpSecret,
         encoding: 'base32',
+        step: 300,
         token: token,
-        window: 1,
+        window: 2,
     });
+
     if (!verified) {
         throw new Error('Invalid OTP');
     }
+    console.log('Token recibido:', token);
+    console.log('OTP Secret usado:', otpSecret);
+    
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
         throw new Error('User not found');
     }
+
     const payload = {
         id: user.id,
         email: user.email,
         role: user.role,
         status: user.status,
     };
-    const jwtToken = jwt.sign(payload, secret, { expiresIn: '24h' });
+    const jwtToken = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
     return { token: jwtToken, payload };
 };
 

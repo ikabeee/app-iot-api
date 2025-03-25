@@ -11,13 +11,20 @@ import userRouter from './modules/user/user.routes';
 import sensorRouter from './modules/sensor/sensor.routes';
 import historyRouter from './modules/historyPlot/historyPlot.routes';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
 
 const app = express();
+dotenv.config();
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(cookieParser());
-dotenv.config();
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-session-secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
 
 app.use('/api', oauthRouter);
 
