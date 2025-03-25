@@ -21,6 +21,7 @@ export const login = async (userData: LoginDto) => {
     if (!isPasswordValid) {
         throw new Error('Invalid password');
     }
+
     const otpSecret = generateSecret();
     const otp = generateOTP(otpSecret.base32);
     await sendOTP(email, otp);
@@ -45,9 +46,11 @@ export const register = async (userData: RegisterDto) => {
             role: 'USER',
         },
     });
+
     const otpSecret = generateSecret();
     const otp = generateOTP(otpSecret.base32);
     await sendOTP(email, otp);
+
     return { otpSecret: otpSecret.base32 };
 };
 
@@ -56,6 +59,7 @@ export const verifyOTP = async (token: string, secret: string, email: string) =>
         secret: secret,
         encoding: 'base32',
         token: token,
+        window: 1,
     });
     if (!verified) {
         throw new Error('Invalid OTP');
@@ -83,6 +87,7 @@ export const generateOTP = (secret: string) => {
     const token = speakeasy.totp({
         secret: secret,
         encoding: 'base32',
+        step: 300,
     });
     return token;
 };
