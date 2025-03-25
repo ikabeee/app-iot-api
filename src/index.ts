@@ -30,10 +30,10 @@ app.use(session({
 
 app.use('/api', oauthRouter);
 
-app.use('/api', plotRouter);
-app.use('/api', sensorRouter);
-app.use('/api', userRouter);
-app.use('/api', historyRouter);
+app.use('/api', isAuthenticated, plotRouter);
+app.use('/api', isAuthenticated, sensorRouter);
+app.use('/api', isAuthenticated, userRouter);
+app.use('/api', isAuthenticated, historyRouter);
 
 const PORT = process.env.PORT || 3000;
 
