@@ -1,4 +1,3 @@
-// filepath: /home/ikabeee/Documents/github/app-iot-api/src/modules/auth/auth.service.ts
 import dotenv from 'dotenv';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -9,7 +8,7 @@ import { prisma } from '../../config/db';
 import { sendEmail } from './../../config/nodemailer';
 dotenv.config();
 
-const secret = process.env.JWT_SECRET || 'your-secret-key';
+const secret = process.env.JWT_SECRET;
 
 export const login = async (userData: LoginDto) => {
     const { password, email } = userData;
@@ -22,21 +21,11 @@ export const login = async (userData: LoginDto) => {
     if (!isPasswordValid) {
         throw new Error('Invalid password');
     }
+    const otpSecret = generateSecret();
+    const otp = generateOTP(otpSecret.base32);
+    await sendOTP(email, otp);
 
-    if (!secret) {
-        throw new Error('JWT_SECRET is not defined');
-    }
-
-    const payload = {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        status: user.status,
-    };
-
-    const token = jwt.sign(payload, secret, { expiresIn: '24h' });
-
-    return { access_token: token, payload };
+    return { otpSecret: otpSecret.base32 };
 };
 
 export const register = async (userData: RegisterDto) => {
@@ -45,10 +34,9 @@ export const register = async (userData: RegisterDto) => {
     if (existingUser) {
         throw new Error('User already exists');
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
         data: {
             name,
             email,
@@ -57,17 +45,33 @@ export const register = async (userData: RegisterDto) => {
             role: 'USER',
         },
     });
+    const otpSecret = generateSecret();
+    const otp = generateOTP(otpSecret.base32);
+    await sendOTP(email, otp);
+    return { otpSecret: otpSecret.base32 };
+};
 
+export const verifyOTP = async (token: string, secret: string, email: string) => {
+    const verified = speakeasy.totp.verify({
+        secret: secret,
+        encoding: 'base32',
+        token: token,
+    });
+    if (!verified) {
+        throw new Error('Invalid OTP');
+    }
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+        throw new Error('User not found');
+    }
     const payload = {
         id: user.id,
         email: user.email,
         role: user.role,
         status: user.status,
     };
-
-    const token = jwt.sign(payload, secret, { expiresIn: '24h' });
-
-    return { access_token: token, payload };
+    const jwtToken = jwt.sign(payload, secret, { expiresIn: '24h' });
+    return { token: jwtToken, payload };
 };
 
 export const generateSecret = () => {
@@ -81,15 +85,6 @@ export const generateOTP = (secret: string) => {
         encoding: 'base32',
     });
     return token;
-};
-
-export const verifyOTP = (token: string, secret: string) => {
-    const verified = speakeasy.totp.verify({
-        secret: secret,
-        encoding: 'base32',
-        token: token,
-    });
-    return verified;
 };
 
 export const sendOTP = async (email: string, otp: string) => {

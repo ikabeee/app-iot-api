@@ -1,26 +1,26 @@
 import { Response, Request } from "express";
 import { login, register, generateSecret, generateOTP, verifyOTP, sendOTP } from "./auth.service";
 
-export const loginController = async(req: Request, res: Response) => {
-    try{
+export const loginController = async (req: Request, res: Response) => {
+    try {
         const userData = req.body;
         const tokenInfo = await login(userData);
-        res.status(201).json({message: `User logged`, tokenInfo});
+        res.status(201).json({ message: `User logged`, tokenInfo });
         return;
-    }catch(error:any){
-        res.status(500).json({httpCode:500, error: `Unexpected error`, timestamp: new Date()});
+    } catch (error: any) {
+        res.status(500).json({ httpCode: 500, error: `Unexpected error: ${error.message}`, timestamp: new Date() });
         return;
     }
 }
 
-export const registerController = async(req: Request, res: Response) =>{
-    try{
-        const userData = req.body
+export const registerController = async (req: Request, res: Response) => {
+    try {
+        const userData = req.body;
         const userRegister = await register(userData);
-        res.status(201).json({message: `User registered`, userRegister});
+        res.status(201).json({ message: `User registered`, userRegister });
         return;
-    }catch(error: any) {
-        res.status(500).json({httpCode:500, error: `Unexpected error ${error}`, timestamp: new Date()});
+    } catch (error: any) {
+        res.status(500).json({ httpCode: 500, error: `Unexpected error: ${error.message}`, timestamp: new Date() });
         return;
     }
 }
@@ -33,23 +33,26 @@ export const generateOTPController = async (req: Request, res: Response): Promis
         await sendOTP(email, otp);
         res.status(200).json({ secret: secret.base32, otp });
         return;
-    } catch (error: unknown) {
-        res.status(500).json({ error: `Unexpected error: ${error}`, timestamp: new Date() });
+    } catch (error: any) {
+        res.status(500).json({ httpCode: 500, error: `Unexpected error: ${error.message}`, timestamp: new Date() });
+        return;
     }
 };
 
-export const verifyOTPController = (req: Request, res: Response): void => {
+export const verifyOTPController = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { token, secret } = req.body;
-        const verified = verifyOTP(token, secret);
-        if (verified) {
-            res.status(200).json({ message: 'OTP verified successfully' });
-        } else {
-            res.status(400).json({ message: 'Invalid OTP' });
-        }
+        const { token, secret, email } = req.body;
+        const { token: jwtToken, payload } = await verifyOTP(token, secret, email);
+        res.cookie('access_token', jwtToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        res.status(200).json({ payload });
         return;
-    } catch (error: unknown) {
-        res.status(500).json({ error: `Unexpected error: ${error}`, timestamp: new Date() });
+    } catch (error: any) {
+        res.status(400).json({ httpCode: 400, error: `OTP verification failed: ${error.message}`, timestamp: new Date() });
         return;
     }
 };

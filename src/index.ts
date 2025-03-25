@@ -10,11 +10,13 @@ import plotRouter from './modules/plot/plot.routes';
 import userRouter from './modules/user/user.routes';
 import sensorRouter from './modules/sensor/sensor.routes';
 import historyRouter from './modules/historyPlot/historyPlot.routes';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
-app.use(cors())
+app.use(cors());
+app.use(cookieParser());
 dotenv.config();
 
 app.use('/api', oauthRouter);
