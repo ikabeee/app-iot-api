@@ -12,6 +12,7 @@ import sensorRouter from './modules/sensor/sensor.routes';
 import historyRouter from './modules/historyPlot/historyPlot.routes';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import { isAuthenticated } from './middlewares/auth';
 
 const app = express();
 dotenv.config();
