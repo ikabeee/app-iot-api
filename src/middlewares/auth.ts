@@ -7,7 +7,7 @@ dotenv.config();
 const secret = process.env.JWT_SECRET as string;
 
 export const auth = (req: Request, res: Response, next: NextFunction): void => {
-    const notAuthRequired = ['/login', '/register', '/verify-otp'];
+    const notAuthRequired = ['/api/login', '/api/register', '/api/verify-otp'];
     if(notAuthRequired.includes(req.url)) return next();
     const {access_token} = req.cookies;
     if(!access_token){

@@ -12,16 +12,14 @@ const jwtSecret = process.env.JWT_SECRET as string;
 
 export const login = async (userData: LoginDto) => {
     const { password, email } = userData;
+    if(!password || !email) throw new Error('S')
+    
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-        throw new Error('User not found');
-    }
-
+    if (!user) throw new Error('User not found');
+    
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-        throw new Error('Invalid password');
-    }
-
+    if (!isPasswordValid) throw new Error('Invalid password');
+    
     const otpSecret = generateSecret();
     const otp = generateOTP(otpSecret.base32);
     await sendOTP(email, otp);

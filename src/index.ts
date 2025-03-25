@@ -30,7 +30,6 @@ app.use(session({
 }));
 
 app.use('/api', oauthRouter);
-
 app.use('/api', plotRouter);
 app.use('/api', sensorRouter);
 app.use('/api', userRouter);
