@@ -60,19 +60,19 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
-    // setInterval(async () => {
-    //     await insertDataSensors();
-    // }, 1000);
-    // setInterval(async()=>{
-    //     await havePlotBeenDeleted();
-    // }, 1000)
-    // setInterval(async()=>{
-    //     await insertPlotData()
-    // }, 1000)
-    // setInterval(async()=>{
-    //     await updatePlotData()
-    // }, 1000)
-    // setInterval(async()=>{
-    //     await insertPlotSensorData()
-    // }, 1000)
+    setInterval(async () => {
+        await insertDataSensors();
+    }, 1000);
+    setInterval(async()=>{
+        await havePlotBeenDeleted();
+    }, 1000)
+    setInterval(async()=>{
+        await insertPlotData()
+    }, 1000)
+    setInterval(async()=>{
+        await updatePlotData()
+    }, 1000)
+    setInterval(async()=>{
+        await insertPlotSensorData()
+    }, 1000)
 });
