@@ -40,7 +40,7 @@ export const register = async (userData: RegisterDto) => {
             email,
             password: hashedPassword,
             status: 'ACTIVE',
-            role: 'USER',
+            role: 'ADMIN',
         },
     });
 
