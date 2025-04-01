@@ -106,7 +106,6 @@ const insertPlotSensorData = async (): Promise<void> => {
 
         for (const plot of apiPlots) {
             try {
-                console.log(plot);
                 if (!plot.sensor) {
                     console.log(`No hay datos de sensor para la parcela ${plot.id}`);
                     continue;
@@ -122,7 +121,6 @@ const insertPlotSensorData = async (): Promise<void> => {
                         plotId: plot.id
                     }
                 });
-                console.log(`Datos del sensor insertados para la parcela ${plot.id}`);
             } catch (createError) {
                 console.error(`Error al insertar datos del sensor para la parcela ${plot.id}:`, createError);
             }
@@ -165,7 +163,6 @@ const updatePlotData = async (): Promise<void> => {
                         lng: plot.longitud
                     }
                 });
-                console.log(`Parcela ${plot.id} actualizada correctamente`);
             } catch (updateError) {
                 console.error(`Error al actualizar la parcela ${plot.id}:`, updateError);
             }

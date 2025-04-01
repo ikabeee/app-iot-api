@@ -68,7 +68,7 @@ app.listen(PORT, () => {
         } catch (error) {
             console.error('Error en el intervalo de actualización de parcelas:', error);
         }
-    }, 10000);
+    }, 1000);
 
     setInterval(async () => {
         try {
@@ -76,7 +76,7 @@ app.listen(PORT, () => {
         } catch (error) {
             console.error('Error en el intervalo de inserción de parcelas:', error);
         }
-    }, 10000);
+    }, 2000);
 
     setInterval(async () => {
         try {
@@ -84,7 +84,7 @@ app.listen(PORT, () => {
         } catch (error) {
             console.error('Error en el intervalo de verificación de parcelas eliminadas:', error);
         }
-    }, 10000);
+    }, 3000);
 
     setInterval(async () => {
         try {
@@ -92,5 +92,13 @@ app.listen(PORT, () => {
         } catch (error) {
             console.error('Error en el intervalo de inserción de datos de sensores:', error);
         }
-    }, 1000);
+    }, 4000);
+
+    setInterval(async () => {
+        try {
+            await insertPlotSensorData();
+        } catch (error) {
+            console.error('Error en el intervalo de inserción de datos de sensores:', error);
+        }
+    }, 5000);
 });
