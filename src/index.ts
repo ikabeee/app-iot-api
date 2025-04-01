@@ -12,7 +12,7 @@ import historyRouter from './modules/historyPlot/historyPlot.routes';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { auth } from './middlewares/auth';
-import { checkPlotStatus, insertPlotData, insertPlotSensorData } from './common/scripts/insertData';
+import { checkPlotStatus, insertPlotData, insertPlotSensorData, updatePlotData } from './common/scripts/insertData';
 import { insertDataSensors } from './common/scripts/sensorApi';
 
 const corsOptions = {
@@ -61,6 +61,14 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
+
+    setInterval(async () => {
+        try {
+            await updatePlotData();
+        } catch (error) {
+            console.error('Error en el intervalo de actualización de parcelas:', error);
+        }
+    }, 10000);
 
     setInterval(async () => {
         try {
