@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Plot" ALTER COLUMN "id" DROP DEFAULT;
+DROP SEQUENCE "Plot_id_seq";

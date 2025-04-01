@@ -24,7 +24,7 @@ model User {
 }
 
 model Plot {
-  id           Int       @id @default(autoincrement())
+  id           Int       @id
   name         String
   location     String
   manager      String

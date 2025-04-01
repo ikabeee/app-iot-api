@@ -1,23 +1,22 @@
+import { ApiResponse } from "../interfaces/api/ApiResponse";
 import axios from 'axios';
-import { SensorApi } from '../interfaces/SensorApi';
-import { ParcelaApi } from '../interfaces/ParcelaApi';
+import { Sensores } from "../interfaces/api/Sensores";
+import { Parcelas } from "../interfaces/api/Parcelas";
 
-const getSensors = async (): Promise<SensorApi> => {
-        const response = await axios.get(`http://moriahmkt.com/iotapp/updated/`);
-        if(!response) {
-                console.error(`Error unexpected`);
-        }
-        const sensorsData = response.data.sensores;
-        return sensorsData;
+const getData = async(): Promise<ApiResponse> => {
+    const response = await axios.get('https://moriahmkt.com/iotapp/updated/');
+    return response.data as ApiResponse;
 }
 
-const getAllPlots = async (): Promise<ParcelaApi[]> => {
-        const response = await axios.get(`http://moriahmkt.com/iotapp/updated/`);
-        if(!response) {
-                console.error(`Error unexpected`);
-        }
-        const plotsData = response.data.parcelas;
-        return plotsData;
+const getSensors = async(): Promise<Sensores> => {
+    const data = await getData();
+    return data.sensores as Sensores;
 }
 
-export { getAllPlots, getSensors }
+const getParcelas = async(): Promise<Parcelas[]> => {
+    const data = await getData();
+    return data.parcelas as Parcelas[];
+}
+
+
+export { getSensors, getParcelas };
