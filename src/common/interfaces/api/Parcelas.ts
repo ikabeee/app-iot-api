@@ -7,7 +7,7 @@ export interface Parcelas {
     responsable: string;
     tipo_cultivo: string;
     ultimo_riego: string;
-    sensores: Sensores;
+    sensor: Sensores;
     latitud: number;
     longitud: number;
 }

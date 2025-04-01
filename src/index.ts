@@ -12,7 +12,7 @@ import historyRouter from './modules/historyPlot/historyPlot.routes';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { auth } from './middlewares/auth';
-import { checkPlotStatus, insertPlotData } from './common/scripts/insertData';
+import { checkPlotStatus, insertPlotData, insertPlotSensorData } from './common/scripts/insertData';
 import { insertDataSensors } from './common/scripts/sensorApi';
 
 const corsOptions = {
@@ -84,43 +84,5 @@ app.listen(PORT, () => {
         } catch (error) {
             console.error('Error en el intervalo de inserción de datos de sensores:', error);
         }
-    }, 10000);
-
-    // // Verificar parcelas eliminadas cada 5 segundos
-    // setInterval(async () => {
-    //     try {
-    //         await havePlotBeenDeleted();
-    //     } catch (error) {
-    //         console.error('Error en el intervalo de verificación de parcelas eliminadas:', error);
-    //     }
-    // }, 5000);
-
-    // // Insertar nuevas parcelas cada 10 segundos
-    // setInterval(async () => {
-    //     try {
-    //         await insertPlotData();
-    //     } catch (error) {
-    //         console.error('Error en el intervalo de inserción de parcelas:', error);
-    //     }
-    // }, 10000);
-
-    // // Actualizar datos de parcelas existentes cada 5 segundos
-    // setInterval(async () => {
-    //     try {
-    //         await updatePlotData();
-    //     } catch (error) {
-    //         console.error('Error en el intervalo de actualización de parcelas:', error);
-    //     }
-    // }, 5000);
-
-    // // Insertar datos de sensores cada 3 segundos
-    // setInterval(async () => {
-    //     try {
-    //         await insertPlotSensorData();
-    //     } catch (error) {
-    //         console.error('Error en el intervalo de inserción de datos de sensores:', error);
-    //     }
-    // }, 3000);
-
-    // console.log('Servicios de actualización automática iniciados');
+    }, 1000);
 });

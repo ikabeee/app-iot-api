@@ -57,7 +57,6 @@ const insertPlotData = async () => {
     plotList.forEach(async (plot) => {
         const {id, nombre, ubicacion, responsable, tipo_cultivo, ultimo_riego, latitud, longitud} = plot;
         const plotExists = await checkPlot(id);
-        console.log(plotExists);
         if (!plotExists) {
             const plotData = {
                 id: plot.id,
@@ -96,7 +95,44 @@ const checkPlotStatus = async () => {
 
 }
 
-export { insertPlotData, checkPlotStatus };
+const insertPlotSensorData = async (): Promise<void> => {
+    try {
+        const apiPlots = await getParcelas();
+        
+        if (apiPlots.length === 0) {
+            console.log('No se obtuvieron datos de sensores de la API');
+            return;
+        }
+
+        for (const plot of apiPlots) {
+            try {
+                console.log(plot);
+                if (!plot.sensor) {
+                    console.log(`No hay datos de sensor para la parcela ${plot.id}`);
+                    continue;
+                }
+
+                await prisma.history.create({
+                    data: {
+                        sun: plot.sensor.sol,
+                        humidity: plot.sensor.humedad,
+                        rain: plot.sensor.lluvia,
+                        temperature: plot.sensor.temperatura,
+                        date: new Date(),
+                        plotId: plot.id
+                    }
+                });
+                console.log(`Datos del sensor insertados para la parcela ${plot.id}`);
+            } catch (createError) {
+                console.error(`Error al insertar datos del sensor para la parcela ${plot.id}:`, createError);
+            }
+        }
+    } catch (error) {
+        console.error('Error en insertPlotSensorData:', error);
+    }
+}
+
+export { insertPlotData, checkPlotStatus, insertPlotSensorData };
 
 
 // import { Plot, Sensor } from "@prisma/client";

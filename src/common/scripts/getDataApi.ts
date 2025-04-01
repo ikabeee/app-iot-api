@@ -4,7 +4,7 @@ import { Sensores } from "../interfaces/api/Sensores";
 import { Parcelas } from "../interfaces/api/Parcelas";
 
 const getData = async(): Promise<ApiResponse> => {
-    const response = await axios.get('https://moriahmkt.com/iotapp/updated/');
+    const response = await axios.get('https://moriahmkt.com/iotapp/test/');
     return response.data as ApiResponse;
 }
 
